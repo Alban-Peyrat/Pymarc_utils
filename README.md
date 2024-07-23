@@ -7,7 +7,7 @@ A set of functions to handle data using [Python `pymarc` library](https://pypi.o
 * `marc_utils_4.py` using version 4.2.2 of the library
 * `marc_utils_5.py` using version 5.2.0
 
-Incompatible changes from `marc_utils_4.py` to `marc_utils_5.py` :
+## Incompatible changes from `marc_utils_4.py` to `marc_utils_5.py`
 
 * `__sort_subfields()` parameter `curr_subf` was renammed to `subf_list`
 * `force_indicators` :
@@ -19,3 +19,5 @@ Incompatible changes from `marc_utils_4.py` to `marc_utils_5.py` :
 * Added `replace_repeatable_subf_content_not_matching_regexp_for_tag()` which is the same as `replace_specific_repeatable_subfield_content_not_matching_regexp()` except it takes as argument a record and a tag and edit all fields with that tagn, like all functions excepts the two using regualr expressions
 
 _See [`pymarc` releases in the GitLab repository](https://gitlab.com/pymarc/pymarc/-/releases) for important changes in the library._
+
+## Functions
