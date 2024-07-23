@@ -173,3 +173,23 @@ Result should be :
 =330  \\$aRésumé
 =701  \1$aRose$bSummer$4070
 ```
+
+## Record `000008` : test `split_tags_if_multiple_specific_subfield()`
+
+* Should have 3 `463` _Nuclear Fusion_ with only 1 `$t`, they should be indentical except for the `$t`
+* Should alse have a `463` _History of the moon_ with no common values with the other 3
+
+Result should be :
+
+```
+=LDR  00249nam  2200085   45e0
+=001  000000
+=200  1\$aLove Colored Master Spark
+=463  02$aNuclear Fusion$0123456$x12$x34$tBird
+=463  02$aNuclear Fusion$0123456$x12$x34$tRenard
+=463  02$aNuclear Fusion$0123456$x12$x34$tPoisson
+=463  95$aHistory of the moon$tHibou$987654$x98$x76
+=701  \1$aRose$bSummer$4070
+```
+
+_Note : History of the moon actually end up first as the new fields are appended after it_

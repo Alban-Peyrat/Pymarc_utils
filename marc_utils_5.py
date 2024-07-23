@@ -226,7 +226,7 @@ def merge_all_fields_by_tag(record:pymarc.record.Record, tag:str, sort:List[str]
 
 def split_tags_if_multiple_specific_subfield(record:pymarc.record.Record, tag:str, code:str):
     """Splits a tag into multiple if there are multiple subfields with this code.
-    Evry ther subfield if pasted with this one
+    Every other subfield is pasted with this one
     
     Takes as argument :
         - record : a pymarc record
@@ -244,13 +244,15 @@ def split_tags_if_multiple_specific_subfield(record:pymarc.record.Record, tag:st
         vals = field.subfields_as_dict()[code]
         # Get all other subfield values
         other_subf = []
-        for index in range(0, len(field.subfields), 2):
-            if field.subfields[index] != code:
-                other_subf += field.subfields[index:index+2]
+        for subf in field.subfields:
+            if subf.code != code:
+                other_subf.append(subf)
         # Append new field for each subfield
         for val in vals:
-            new_field = pymarc.field.Field(tag, field.indicators)
-            new_field.subfields = other_subf + [code, val]
+            # You NEED to copy the list because pymarc doesn't create a copy
+            # 
+            new_field = pymarc.field.Field(tag, field.indicators, subfields=other_subf.copy())
+            new_field.add_subfield(code, val)
             record.add_ordered_field(new_field)
 
         # Delete the original field
