@@ -233,3 +233,23 @@ Result should be :
 =200  1\$aLove Colored Master Spark
 =701  \1$aRose$bSummer$4070
 ```
+
+## Record `000011` : test `delete_field_if_all_subfields_match_regexp()`
+
+* `410` _Jacques_ should be deleted as both `$t` matches the regexp
+* `410` _Marion_ should stay as one `$t` does not match the regexp
+* `410` _Lucy_ should be deleted as there are no `$t` and `keep_if_no_subf` is set to `False`
+* `412` _Rodrigue_ should stay as there are no `$t` but `keep_if_no_subf` is set to `True`
+* `412` _Clémence_ should be deleted as the only `$t` matches the regexp
+
+Result should be :
+
+```
+=LDR  00290nam  2200133   45e0
+=001  000011
+=200  1\$aLove Colored Master Spark
+=330  \\$aRésumé
+=410  12$t  $tNo$aMarion
+=412  12$aRodrigue
+=701  \1$aRose$bSummer$4070
+```
