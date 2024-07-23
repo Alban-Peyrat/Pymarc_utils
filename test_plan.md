@@ -96,9 +96,7 @@ Result should be :
 
 * `701` _Rose_ : last subfield should be a new `$z`
 * `701` _Branwen_ : a new `$z` should be in 6th position, between `$4630` & `$4999`
-* `701` _Rose_ : a `$z` is already here, so no new `$z` should appear
-
-
+* `701` _Schnee_ : a `$z` is already here, so no new `$z` should appear
 
 Result should be :
 
@@ -110,4 +108,26 @@ Result should be :
 =701  \1$aRose$bSummer$4070$zfre
 =701  \1$aBranwen$bRaven$cQrow$4070$4630$zfre$4999$4888$4777$4666
 =701  \1$aSchnee$bWinter$zeng
+```
+
+## Record `000005` : test `edit_specific_repeatable_subfield_content_with_regexp()`
+
+* `101` : all `$a` and `$cgat` should only be 3 characters long, `$d` still has spaces, `$cFR` should still have spaces
+* `102` : on both `102`, all `$a` and `$cGE` should only be 2 characters long, `$d` still has spaces, `$cfre` should still have spaces
+* `200` : on both `200`, all `$e` that were only spaces should be empty, the other should have content, the `$a` with only spaces should still only be spaces
+* `330` : the first one (_éditeur_) should have a empty `$a`, the second one (_moi_) should still have spaces
+
+Result should be :
+
+```
+=LDR  00406nam  2200133   45e0
+=001  000005
+=101  11$afre$d  fre   $aeng$ajap$cgat$c  FR
+=102  11$aFR$d  FR   $aUK$aSP$cGE$c  fre
+=102  11$aFR$cGB$d  IT  
+=200  1\$aLove Colored Master Spark$e$eNuclear Fusion$e$a    $eHistory of the moon
+=200  1\$aEndless$e$a    $eNow
+=330  \\$a$2editeur
+=330  \\$a    $2moi
+=701  \1$aRose$bSummer$4070
 ```
