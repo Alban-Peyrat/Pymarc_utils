@@ -4,6 +4,14 @@ import pymarc
 from typing import List
 import re
 
+# ------------------------------ utils internal ------------------------------
+
+def __get_all_subfield_values_as_list(field:pymarc.field.Field) -> List[str]:
+    """Returns all subfield values (no matter the subfield code) as a list of string
+    
+    Takes as argument a pymarc Field"""
+    return [elem.value for elem in field.subfields]
+
 # ------------------------------ Sort ------------------------------
 
 def sort_fields_by_tag(record:pymarc.record.Record):
@@ -303,13 +311,15 @@ def delete_empty_subfields(record:pymarc.record.Record):
         if field.is_control_field():
             continue
         # If something is empty
-        if "" in field.subfields:
-            curr_subf = field.subfields
-            new_subf = []
-            for index in range(0, len(curr_subf), 2):
-                if curr_subf[index+1] != "":
-                    new_subf += curr_subf[index:index+2]
-            field.subfields = new_subf
+        if "" in __get_all_subfield_values_as_list(field):
+            # Don't use delete subfield, it deletes the first occurrence found
+            new_subf_list = []
+            # Loop thorugh all subfields and copy those with values
+            for subf in field.subfields:
+                if subf.value != "":
+                    new_subf_list.append(subf)
+            # Replace current subfields by the new list
+            field.subfields = new_subf_list
 
 def delete_empty_fields(record:pymarc.record.Record):
     "Deletes every empty fields"
