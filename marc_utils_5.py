@@ -10,7 +10,7 @@ def sort_fields_by_tag(record:pymarc.record.Record):
     """Sort the record fields by their tag"""
     record.fields = sorted(record.fields, key=lambda field: field.tag)
 
-def __sort_subfields(curr_subf:List[pymarc.field.Subfield], sort:List[str]) -> List[str]:
+def __sort_subfields(subf_list:List[pymarc.field.Subfield], sort:List[str]) -> List[str]:
     """Sort a list of subfields and returns the new list :
     * If a subfield code is not in sort, its position will stay the same
     * If a subfield is in sort, it will be moved to that order
@@ -18,7 +18,7 @@ def __sort_subfields(curr_subf:List[pymarc.field.Subfield], sort:List[str]) -> L
     from values to use to sort at the end
 
     Takes as argument :
-        - curr_subf : subfields as given by pymarc.field.Field.subfields [code1, content1, code2, content2, etc.]
+        - subf_list : subfields as given by pymarc.field.Field.subfields [code1, content1, code2, content2, etc.]
         - sort : a list of subfield codes (str)"""
 
     # Stores every existing subfield
@@ -34,18 +34,18 @@ def __sort_subfields(curr_subf:List[pymarc.field.Subfield], sort:List[str]) -> L
     
     # Positive sort
     for code in positive_sort:
-        for subf in curr_subf:
+        for subf in subf_list:
             if subf.code == code:
                 new_subf.append(subf)
 
     # Default sort
-    for subf in curr_subf:
+    for subf in subf_list:
         if subf.code not in positive_sort + negative_sort:
             new_subf.append(subf)
 
     # Negative sort
     for code in negative_sort:
-        for subf in curr_subf:
+        for subf in subf_list:
             if subf.code == code:
                 new_subf.append(subf)
     
@@ -68,18 +68,23 @@ def sort_subfields_for_tag(record:pymarc.record.Record, tag:str, sort:list[str])
 
 # ------------------------------ Force ------------------------------
 
-def force_indicators(record:pymarc.record.Record, tag:str, indicators:List[str]=[" ", " "]):
+def force_indicators(record:pymarc.record.Record, tag:str, ind1:str=None, ind2:str=None):
     """Forces the indicators on every field with this tag in the record
-    Defaults to no indicator
+    If one of the indicatior is None, keep its current value
     
     /!\\ Does not check if indicators are legal values
 
     Takes as argument :
         - record : a pymarc record
         - tag : the tag to check (str)
-        - indicators : the indicators (list of str)"""
+        - ind1 : first indicator (str), defaults to keeping the current one
+        - ind2 : first indicator (str), defaults to keeping the current one"""
     for field in record.get_fields(tag):
-        field.indicators = indicators
+        if ind1 is None:
+            ind1 = field.indicator1
+        if ind2 is None:
+            ind2 = field.indicator2
+        field.indicators = pymarc.field.Indicators(first=ind1, second=ind2)
 
 # ------------------------------ Add ------------------------------
 
