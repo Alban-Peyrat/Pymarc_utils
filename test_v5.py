@@ -73,6 +73,9 @@ for index, record in enumerate(MARC_READER):
     marc_utils.delete_field_if_all_subfields_match_regexp(record, "410", "t", r"^\s+$", keep_if_no_subf=False)
     marc_utils.delete_field_if_all_subfields_match_regexp(record, "412", "t", r"^\s+$", keep_if_no_subf=True)
 
+    # Record 000012 : test deleting multiple subfields in a field
+    marc_utils.delete_multiple_subfield_for_tag(record, "725", "4")
+
     # Write record
     MARC_WRITER.write(record.as_marc())
 
