@@ -91,3 +91,23 @@ Result should be :
 =701  91$aRose$bSummer$4070
 =702  08$aBranwen$bRaven$4070
 ```
+
+## Record `000004` : test `add_missing_subfield_to_field()`
+
+* `701` _Rose_ : last subfield should be a new `$z`
+* `701` _Branwen_ : a new `$z` should be in 6th position, between `$4630` & `$4999`
+* `701` _Rose_ : a `$z` is already here, so no new `$z` should appear
+
+
+
+Result should be :
+
+```
+=LDR  00148nam a2200073   45e0
+=001  000004
+=200  1\$aLove Colored Master Spark
+=330  \\$aRésumé
+=701  \1$aRose$bSummer$4070$zfre
+=701  \1$aBranwen$bRaven$cQrow$4070$4630$zfre$4999$4888$4777$4666
+=701  \1$aSchnee$bWinter$zeng
+```
