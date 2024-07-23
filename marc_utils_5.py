@@ -335,7 +335,7 @@ def delete_empty_fields(record:pymarc.record.Record):
 
 
 def delete_field_if_all_subfields_match_regexp(record:pymarc.record.Record, tag:str, code:str, pattern:str, keep_if_no_subf:bool=True):
-    """Delete all fields for this tag if ALL subfields with this code match the regexp.
+    """For all fields with given tag, delete the entire field if ALL subfields with this code match the regexp.
     
     Takes as argument :
         - record : a pymarc record
@@ -347,6 +347,7 @@ def delete_field_if_all_subfields_match_regexp(record:pymarc.record.Record, tag:
 
     for field in record.get_fields(tag):
         # If the field is not here, keep or del (yeah nesting "if" was not necessary but easier to read)
+        # Why do I yap like that ?
         if not code in field.subfields_as_dict():
             if keep_if_no_subf:
                 continue
