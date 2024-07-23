@@ -268,37 +268,29 @@ def split_merged_tags(record:pymarc.record.Record, tag:str):
     
     for field in record.get_fields(tag):
         all_subf = field.subfields_as_dict()
-        # Skip this fieldif all subfields are not repeated
-        skip = True
+        # Stores the highest number or a repeated subfield
         highest_repeat = 1
         for code in all_subf:
-            if len(all_subf[code]) > 1:
-                skip = False
             if len(all_subf[code]) > highest_repeat:
                 highest_repeat = len(all_subf[code])
-        if skip:
+        # Skip this field if all subfields are not repeated
+        if highest_repeat < 1:
             continue
 
-        # Creates a list of dict
-        list_of_new_fields:List[dict] = []
+        # Creates the new fields
         for index in range(0, highest_repeat):
-            new_field = {}
+            new_field = pymarc.field.Field(tag=tag, indicators=field.indicators)
+            # Add every subfield
             for code in all_subf:
                 # Index is not superior to maximum subfields for this code
                 if index < len(all_subf[code]):
-                    new_field[code] = all_subf[code][index]
+                    new_field.add_subfield(code, all_subf[code][index])
                 # Index is out of range, defaults to the first subfield
                 else:
-                    new_field[code] = all_subf[code][0]
-            list_of_new_fields.append(new_field)
-
-        # Adds every new field to the record
-        for new_field_as_dict in list_of_new_fields:
-            new_field = pymarc.field.Field(tag=tag, indicators=field.indicators)
-            for code in new_field_as_dict:
-                new_field.add_subfield(code, new_field_as_dict[code])
+                    new_field.add_subfield(code, all_subf[code][0])
+            # Add the new field to the record
             record.add_ordered_field(new_field)
-        
+
         # Delete the original field
         record.remove_field(field)
 

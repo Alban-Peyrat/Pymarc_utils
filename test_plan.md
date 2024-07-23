@@ -193,3 +193,27 @@ Result should be :
 ```
 
 _Note : History of the moon actually end up first as the new fields are appended after it_
+
+## Record `000009` : test `split_merged_tags()`
+
+* First `777` (with _Schnee_) : 3 `$a`, 1 `$f`, 2 `$4` : should end up in 3 `777`, all of them with the same `$f`, _BRANWEN (Raven)_ should have a `$4651` while the others two have `$4651` (because _ROSE (Summer)_ is the correct index & _SCHNEE (Winter)_ is out of range, so it copies the first one)
+* Second `777` (without _Schnee_) should be split in two identical field, except for the `$a` the same except for 
+* Third `777` (_Xiao Long_) should stay as it is
+* `999` : should be splitted in `$aSTET$bADM123456$c750 CAT` & `$aMRSL$bADM987654$c621 POM`, as all subfields appears the same number of times & their order should stay the same
+
+Result should be :
+
+```
+=LDR  00364nam  2200109   45e0
+=001  000009
+=200  1\$aLove Colored Master Spark
+=330  \\$aRésumé
+=777  \1$aROSE (Summer)$f19..-....$4070
+=777  \1$aBRANWEN (Raven)$f19..-....$4651
+=777  \1$aSCHNEE (Winter)$f19..-....$4070
+=777  \1$aROSE (Ruby)$f1885-1978$4999
+=777  \1$aBRANWEN (Qrow)$f1885-1978$4999
+=777  \1$aXIAO LONG (Yang)$4000
+=995  \1$aSTET$bADM123456$c750 CAT
+=995  \1$aMRSL$bADM987654$c621 POM
+```
