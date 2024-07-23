@@ -63,7 +63,7 @@ Result should be :
 
 ```
 =LDR  00337nam  2200121   45e0
-=001  000001
+=001  000002
 =200  1\$aLove Colored Master Spark
 =330  \\$aRésumé
 =610  \\$9123$9456$aJardin chinois$cRenard$bPoisson$8987$8654$zfre
@@ -71,4 +71,23 @@ Result should be :
 =615  \\$0963$fNuclear$aSolar$zgra
 =620  \\$aMaiden$zytu$5258$kCapriccio
 =701  \1$aRose$bSummer$4070
+```
+
+## Record `000003` : test `force_indicators()`
+
+* `200` : neither indicator should change and stay `1` then empty
+* `330` : both `330` should change to `3` then empty as indicators
+* `701` : first indicator should be `9` and the second one stay `1`
+* `702` : first indicator should stay the same as `0` and the second one should be `8`
+
+Result should be :
+
+```
+=LDR  00216nam  2200097   45e0
+=001  000003
+=200  1 $aLove Colored Master Spark
+=330  3 $aRésumé
+=330  3 $aRésumé n°2
+=701  91$aRose$bSummer$4070
+=702  08$aBranwen$bRaven$4070
 ```
