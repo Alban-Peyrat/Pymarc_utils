@@ -35,6 +35,9 @@ for index, record in enumerate(MARC_READER):
         marc_utils.force_indicators(record, "701", ind1="9")
         marc_utils.force_indicators(record, "702", ind2="8")
 
+    # Recod 000004
+    if record_nb == "000004":
+        marc_utils.add_missing_subfield_to_field(record, "701", "z", "fre", 5)
 
     # Write record
     MARC_WRITER.write(record.as_marc())
