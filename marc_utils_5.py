@@ -193,10 +193,16 @@ def merge_all_fields_by_tag(record:pymarc.record.Record, tag:str, sort:List[str]
     Edits the record and also returns the new field
     Indicators used are from the first field
     
+    Sorting :
+        * If a subfield code is not in sort, its position will stay the same
+        * If a subfield is in sort, it will be moved to that order
+        * To sort at the end, use "*" as a code to separate values to use to sort at the beginning
+        from values to use to sort at the end
+
     Takes as argument :
         - record : the pymarc record
         - tag : the field tag to merge (str)
-        - sort : a list of subfield codes (str) (see sort_subfields for explanation)"""
+        - sort : a list of subfield codes (str)"""
     
     # Return if no match
     if record.get_fields(tag) == []:
