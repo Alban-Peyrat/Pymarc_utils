@@ -144,9 +144,9 @@ def edit_repeatable_subf_content_with_regexp_for_tag(record:pymarc.record.Record
         edit_specific_repeatable_subfield_content_with_regexp(field, codes, pattern, repl)
 
 
-def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymarc.field.Field, codes:List[str], pattern:str, repl:str) -> List[str]:
+def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymarc.field.Field, codes:List[str], pattern:str, repl:str) -> List[pymarc.field.Subfield]:
     """Replace all subfields of a code by a value if they do not match a regexp (no flag).
-    Edits the field and also return the subfield list as [code, content, code2, content2, etc.]
+    Edits the field and also return the subfield list (as pymarc.field.Subfield)
     
     Takes as argument :
         - field : pymarc Field to edit
@@ -154,23 +154,37 @@ def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymar
         - pattern : regexp pattern
         - repl : repalcement text"""
     
-    curr_subf:list = field.subfields
+    subf_list:List[pymarc.field.Subfield] = field.subfields
     new_subf = []
-    for index in range(0, len(curr_subf), 2):
-        # If not the right code, keep the subfield
-        if curr_subf[index] not in codes:
-            new_subf += curr_subf[index:index+2]
-        # use the regex replace
-        else:
-            new_subf.append(curr_subf[index])
-            if not re.match(pattern, curr_subf[index+1]):
-                new_subf.append(repl)
+    for subf in subf_list:
+        # If right codes, check if the regex match
+        if subf.code in codes:
+            # If no match, rewrite using replacement string
+            if not re.match(pattern, subf.value):
+                new_subf.append(subf._replace(value=repl))
+            # If match, add the unedited subfield
             else:
-                new_subf.append(curr_subf[index+1])
+                new_subf.append(subf)
+        # Else, add the unedited subfield
+        else:
+            new_subf.append(subf)
 
     # Updates the field
     field.subfields = new_subf
     return new_subf
+
+def replace_repeatable_subf_content_not_matching_regexp_for_tag(record:pymarc.record.Record, tag:str, codes:List[str], pattern:str, repl:str):
+    """Replace all subfields of a code by a value if they do not match a regexp (no flag).
+    
+    Takes as argument :
+        - record : a pymarc record
+        - tag : a field tag (str)
+        - codes : list of codes to edit (str)
+        - pattern : regexp pattern
+        - repl : repalcement text"""
+    
+    for field in record.get_fields(tag):
+        replace_specific_repeatable_subfield_content_not_matching_regexp(field, codes, pattern, repl)
 
 # ------------------------------ Merge ------------------------------
 

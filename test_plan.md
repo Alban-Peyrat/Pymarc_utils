@@ -131,3 +131,27 @@ Result should be :
 =330  \\$a    $2moi
 =701  \1$aRose$bSummer$4070
 ```
+
+## Record `000006` : test `replace_specific_repeatable_subfield_content_not_matching_regexp()`
+
+* `101` : first `$a` & `c` should be `und`, `$d` still has spaces, `$aeng` should still be there
+* `102` :
+  * On the first one, first `$a` & `c` should be `??`, `$d` still has spaces, `$aUK` should still be there
+  * On the second one, `$a` should be `??`, `$d` still has spaces, `$cGB` should still be there
+* `200` : on both `200`, all `$e` not starting with `in :` should be `ARA ARA ARA`, the other are unchanged
+* `330` : the first one (_éditeur_) should have be `Résumé invalide`, the second one (_moi_) should still have spaces
+
+Result should be :
+
+```
+=LDR  00386nam  2200133   45e0
+=001  000006
+=101  11$aund$d  fre   $aeng$cund
+=102  11$a??$d  FR   $aUK$c??
+=102  11$a??$cGB$d  IT  
+=200  1\$aLove Colored Master Spark$ein : Nuclear Fusion$a    $eARA ARA ARA
+=200  1\$aEndless$ein : Now$a    $eARA ARA ARA
+=330  \\$aRésumé invalide$2editeur
+=330  \\$a    $2moi
+=701  \1$aRose$bSummer$4070
+```
