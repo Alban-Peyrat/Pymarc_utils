@@ -253,3 +253,20 @@ Result should be :
 =412  12$aRodrigue
 =701  \1$aRose$bSummer$4070
 ```
+
+## Record `000012` : test `delete_multiple_subfield_for_tag()`
+
+* `725` _Rose_ should only keep the `$4563` between the `$a` & `$b`
+* `725` _Branwen_ & _Schnee_ should stay the same
+
+Result should be :
+
+```
+=LDR  00225nam  2200097   45e0
+=001  000012
+=200  1\$aLove Colored Master Spark
+=330  \\$aRésumé
+=725  \1$aRose$4563$bSummer
+=725  \1$aBranwen$bRaven$4070
+=725  \1$aSchnee$bWinter
+```

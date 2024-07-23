@@ -378,13 +378,16 @@ def delete_multiple_subfield_for_tag(record:pymarc.record.Record, tag:str, code:
         # Leave if there is no subfield with this code
         if not code in field.subfields_as_dict():
             continue
+        # Don't use delete subfield, it deletes the first occurrence found
         first = True
-        curr_subf = field.subfields
-        new_subf = []
-        for index in range(0, len(curr_subf), 2):
-            if curr_subf[index] != code:
-                new_subf += curr_subf[index:index+2]
-            elif curr_subf[index] == code and first:
-                new_subf += curr_subf[index:index+2]
+        new_subf_list = []
+        # Loop thorugh all subfields and copy those with values
+        for subf in field.subfields:
+            if subf.code != code:
+                new_subf_list.append(subf)
+            # Do not merge this elif, you need to set first to false only if it's the first occurrence of THIS subfield
+            elif subf.code == code and first:
+                new_subf_list.append(subf)
                 first = False
-        field.subfields = new_subf
+        # Replace current subfields by the new list
+        field.subfields = new_subf_list
