@@ -60,6 +60,10 @@ for index, record in enumerate(MARC_READER):
     # Record 000008 : test splitting a field if a specific subfield is repeated
     marc_utils.split_tags_if_multiple_specific_subfield(record, "463", "t")
 
+    # Record 000009 : test splitting field that have multiple times subfields
+    marc_utils.split_merged_tags(record, "995")
+    marc_utils.split_merged_tags(record, "777")
+
     # Write record
     MARC_WRITER.write(record.as_marc())
 
