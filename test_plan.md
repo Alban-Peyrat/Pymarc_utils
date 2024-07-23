@@ -1,6 +1,6 @@
 # Test plan
 
-_Expected results are viewed with MarcEdit here_
+_Expected results are viewed with MarcEdit here, except if I forget to turn empty indicators into backslashes_
 
 ## Record `000000` : nothing
 
@@ -153,5 +153,23 @@ Result should be :
 =200  1\$aEndless$ein : Now$a    $eARA ARA ARA
 =330  \\$aRésumé invalide$2editeur
 =330  \\$a    $2moi
+=701  \1$aRose$bSummer$4070
+```
+
+## Record `000007` : test `merge_all_fields_by_tag()`
+
+* _Big sort tests are done in the record testing sorting functions_
+* `099` should have `12` as indicators and have `$tLIV` → `$x` → `$tART`
+* `181` should have empty indicators and have `$6` → `$a` → `$2`
+
+Result should be :
+
+```
+=LDR  00255nam  2200133   45e0
+=001  000007
+=099  12$tLIV$x0$tART
+=181  \\$6Rose$arenard$2rda
+=200  1\$aLove Colored Master Spark
+=330  \\$aRésumé
 =701  \1$aRose$bSummer$4070
 ```

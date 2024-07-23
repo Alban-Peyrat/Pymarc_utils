@@ -53,6 +53,11 @@ for index, record in enumerate(MARC_READER):
         marc_utils.replace_repeatable_subf_content_not_matching_regexp_for_tag(record, "102", ["a", "c"], r"^[A-Z]{2}$", r"??")
         marc_utils.replace_repeatable_subf_content_not_matching_regexp_for_tag(record, "200", ["e"], r"^in :", "ARA ARA ARA")
 
+    # Record 000007 : test merging fields
+    marc_utils.merge_all_fields_by_tag(record, "099")
+    marc_utils.merge_all_fields_by_tag(record, "181", ["6", "*", "2"])
+
+
     # Write record
     MARC_WRITER.write(record.as_marc())
 
