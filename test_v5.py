@@ -46,6 +46,13 @@ for index, record in enumerate(MARC_READER):
         marc_utils.edit_repeatable_subf_content_with_regexp_for_tag(record, "102", ["a", "c"], r"^\s*([A-Z]{2})\s*$", r"\1")
         marc_utils.edit_repeatable_subf_content_with_regexp_for_tag(record, "200", ["e"], r"^\s+$", "")
 
+    # Record 000006 : test replacing specific subfields not maching regexp (old & new func)
+    if record_nb == "000006":
+        marc_utils.replace_specific_repeatable_subfield_content_not_matching_regexp(record["101"], ["a", "c"], r"^[a-z]{3}$", "und")
+        marc_utils.replace_specific_repeatable_subfield_content_not_matching_regexp(record["330"], ["a"], r"^Résumé \:", "Résumé invalide")
+        marc_utils.replace_repeatable_subf_content_not_matching_regexp_for_tag(record, "102", ["a", "c"], r"^[A-Z]{2}$", r"??")
+        marc_utils.replace_repeatable_subf_content_not_matching_regexp_for_tag(record, "200", ["e"], r"^in :", "ARA ARA ARA")
+
     # Write record
     MARC_WRITER.write(record.as_marc())
 
