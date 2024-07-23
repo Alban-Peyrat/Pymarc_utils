@@ -217,3 +217,19 @@ Result should be :
 =995  \1$aSTET$bADM123456$c750 CAT
 =995  \1$aMRSL$bADM987654$c621 POM
 ```
+
+## Record `000010` : test `delete_empty_subfields()` & `delete_empty_fields()`
+
+* `003` has no value, it should be deleted
+* `330` has no subfields, it should be deletesd
+* `701` has a `$c` with no value, this subfield should be deleted but the rest should stay
+* `702` has two empty subfields, they whould be deleted, then the field should also be deleted as the test deletes first empty subfields and then empty fields
+
+Result should be :
+
+```
+=LDR  00170nam  2200097   45e0
+=001  000010
+=200  1\$aLove Colored Master Spark
+=701  \1$aRose$bSummer$4070
+```

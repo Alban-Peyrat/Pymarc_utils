@@ -64,6 +64,11 @@ for index, record in enumerate(MARC_READER):
     marc_utils.split_merged_tags(record, "995")
     marc_utils.split_merged_tags(record, "777")
 
+    # Record 000010 : test deleting empty subfields & empty fields
+    if record_nb == "000010":
+        marc_utils.delete_empty_subfields(record)
+        marc_utils.delete_empty_fields(record)
+
     # Write record
     MARC_WRITER.write(record.as_marc())
 
