@@ -12,11 +12,11 @@ A set of functions to handle data using [Python `pymarc` library](https://pypi.o
 * `__sort_subfields()` parameter `curr_subf` was renammed to `subf_list`
 * `force_indicators` :
   * Parameter `indicators` (list of strings, defaulted to `[" ", " "]`) was changed to become two parameter `ind1` & `ind2`, both `str` defaulted to `None`
-  * Now, if their value is set to `None` (default behaviour), keeps their current value (before, default behaviour was to write to a blank and it could not be used to keep the field current indicators)
+  * Now, if their value is set to `None` (default behaviour), keeps their current value (before, default behaviour was to write to a blank and this function could not be used to keep the current field indicators)
 * `edit_specific_repeatable_subfield_content_with_regexp()` returns a list of `pymarc.field.Subfield` instead of a list of string following old subfield managing system (code 1, value 1, code 2, value 2, etc.)
-* Added `edit_repeatable_subf_content_with_regexp_for_tag()` which is the same as `edit_specific_repeatable_subfield_content_with_regexp()` except it takes as argument a record and a tag and edit all fields with that tagn, like all functions excepts the two using regualr expressions
+* Added `edit_repeatable_subf_content_with_regexp_for_tag()` which is the same as `edit_specific_repeatable_subfield_content_with_regexp()` except it takes as argument a record and a tag and edit all fields with that tag, like all functions except the two using regular expressions
 * `replace_specific_repeatable_subfield_content_not_matching_regexp()` returns a list of `pymarc.field.Subfield` instead of a list of string following old subfield managing system (code 1, value 1, code 2, value 2, etc.)
-* Added `replace_repeatable_subf_content_not_matching_regexp_for_tag()` which is the same as `replace_specific_repeatable_subfield_content_not_matching_regexp()` except it takes as argument a record and a tag and edit all fields with that tagn, like all functions excepts the two using regualr expressions
+* Added `replace_repeatable_subf_content_not_matching_regexp_for_tag()` which is the same as `replace_specific_repeatable_subfield_content_not_matching_regexp()` except it takes as argument a record and a tag and edit all fields with that tag, like all functions except the two using regular expressions
 
 _See [`pymarc` releases in the GitLab repository](https://gitlab.com/pymarc/pymarc/-/releases) for important changes in the library._
 
@@ -28,9 +28,9 @@ _See [`pymarc` releases in the GitLab repository](https://gitlab.com/pymarc/pyma
 
 Every functions that uses sort on subfields follow this logic :
 
-* If a subfield code is not in the `sort` argument, its position will stay the same
+* If a subfield code is not in the `sort` argument, its position will stay the same relative to the other subfields not moving
 * If a subfield is in the `sort` argument, it will be moved to that order
-* To sort at the end, use `*` as a code to separate values to use to sort at the beginning from values to use to sort at the end
+* To sort at the end, use `*` as a code to separate codes used to sort at the beginning from codes used to sort at the end
 
 For example :
 
@@ -40,19 +40,19 @@ For example :
 
 #### Function `sort_fields_by_tag()`
 
-Sort the record fields by their tag.
+Sorts the record fields by their tag.
 
 Takes as argument : `record` (`pymarc.record.Record`)
 
 #### Function `sort_subfields_for_tag()`
 
-Sort subfields for all fields with given tag.
+Sorts subfields for all fields with given tag.
 
 Takes as argument :
 
 * `record` (`pymarc.record.Record`)
 * `tag` (`str`) : the fields tag to sort
-* `sort` (`list` of `str`) : list of subfields codes to sort. See [_`sort` argument logic_](#sort-argument-logic) to see how to configure it.
+* `sort` (`list` of `str`) : list of subfields codes to sort. See [_`sort` argument logic_](#sort-argument-logic) to see how to configure it for this indicator.
 
 ### Forcing data
 
@@ -82,12 +82,12 @@ Takes as argument :
 * `tag` (`str`) : the fields tag to edit
 * `code` (`str`) : the subfield code
 * `val` (`str`) : the subfield value to add
-* _[Optionnal]_ `pos` (`int`, default to `999`) : the position of the new subfield (if added). _First position is `0`_
+* _[Optionnal]_ `pos` (`int`, defaulted to `999`) : the position of the new subfield (if added). _First position is `0`_
 
 #### Function `edit_repeatable_subf_content_with_regexp_for_tag()`
 
-Apply a substitution using regular expression to all subfields with given codes for all fields with given tag.
-No flag are used, and no flag can be set.
+Applies a substitution using regular expression to all subfields with given codes for all fields with given tag.
+No flag are used and no flag can be set.
 
 _Alternate version `edit_specific_repeatable_subfield_content_with_regexp()` is not described here to keep all documented functions using the same logic in arguments to pass._
 
@@ -101,8 +101,8 @@ Takes as argument :
 
 #### Function `replace_repeatable_subf_content_not_matching_regexp_for_tag()`
 
-Replace all subfields value with given codes for all fields with given tag if they do not match given regular expression.
-No flag are used, and no flag can be set.
+Replaces all subfields value with given codes for all fields with given tag if they do not match given regular expression.
+No flag are used and no flag can be set.
 
 _Alternate version `replace_specific_repeatable_subfield_content_not_matching_regexp()` is not described here to keep all documented functions using the same logic in arguments to pass._
 
@@ -118,8 +118,8 @@ Takes as argument :
 
 #### Function `merge_all_fields_by_tag()`
 
-Merge __all__ fields with given tag, sorting the subfields if wanted.
-Edit the record __and return the new field__ (`pymarc.field.Field`).
+Merges __all__ fields with given tag, sorting the subfields if wanted.
+Edits the record __and returns the new field__ (`pymarc.field.Field`).
 Indicators used are those from the first field occurrence.
 
 Takes as argument :
@@ -153,19 +153,19 @@ In case some fields sufields have less occurrence than other subfields, copies t
 
 #### Function `delete_empty_subfields()`
 
-Delete every empty subfields in whole the record.
+Deletes every empty subfields in whole the record.
 
 Takes as argument : `record` (`pymarc.record.Record`)
 
 #### Function `delete_empty_fields()`
 
-Delete every empty fields in whole the record.
+Deletes every empty fields in whole the record.
 
 Takes as argument : `record` (`pymarc.record.Record`)
 
 #### Function `delete_field_if_all_subfields_match_regexp()`
 
-For all fields with given tag, delete the entire field if __all__ subfields with given code match the given regular expression.
+For all fields with given tag, deletes the entire field if __all__ subfields with given code match the given regular expression.
 
 Takes as argument :
 
@@ -174,3 +174,13 @@ Takes as argument :
 * `code` (`str`) : the subfield code to check
 * `pattern` (`str`) : regular expression matching pattern
 * _[Optionnal]_  `keep_if_no_subf` (`bool`, default to `True`) : if no subfield has given code, should the field be __kept__
+
+#### Function `delete_multiple_subfield_for_tag()`
+
+For all fields with given tag, only keeps the first subfield with given code.
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* `tag` (`str`) : the fields tag to edit
+* `code` (`str`) : the subfield code to keep only once
