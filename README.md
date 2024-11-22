@@ -17,6 +17,7 @@ A set of functions to handle data using [Python `pymarc` library](https://pypi.o
 * Added `edit_repeatable_subf_content_with_regexp_for_tag()` which is the same as `edit_specific_repeatable_subfield_content_with_regexp()` except it takes as argument a record and a tag and edit all fields with that tag, like all functions except the two using regular expressions
 * `replace_specific_repeatable_subfield_content_not_matching_regexp()` returns a list of `pymarc.field.Subfield` instead of a list of string following old subfield managing system (code 1, value 1, code 2, value 2, etc.)
 * Added `replace_repeatable_subf_content_not_matching_regexp_for_tag()` which is the same as `replace_specific_repeatable_subfield_content_not_matching_regexp()` except it takes as argument a record and a tag and edit all fields with that tag, like all functions except the two using regular expressions
+* Added `field_as_string()` and `record_as_string()` which returns the field / record as a string in WinIBW style
 
 _See [`pymarc` releases in the GitLab repository](https://gitlab.com/pymarc/pymarc/-/releases) for important changes in the library._
 
@@ -184,3 +185,21 @@ Takes as argument :
 * `record` (`pymarc.record.Record`)
 * `tag` (`str`) : the fields tag to edit
 * `code` (`str`) : the subfield code to keep only once
+
+### Debugging
+
+#### Function `field_as_string()`
+
+Returns the field as a string in WinIBW (blank indicators are returned as `#`)
+
+Takes as argument :
+
+* `field` (`pymarc.field.Field`)
+
+#### Function `record_as_string()`
+
+Returns the record as a string in WinIBW (blank indicators are returned as `#`)
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)

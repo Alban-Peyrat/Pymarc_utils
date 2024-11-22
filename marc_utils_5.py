@@ -391,3 +391,29 @@ def delete_multiple_subfield_for_tag(record:pymarc.record.Record, tag:str, code:
                 first = False
         # Replace current subfields by the new list
         field.subfields = new_subf_list
+
+# ------------------------------ Debug ------------------------------
+
+def field_as_string(field:pymarc.field.Field) -> str:
+    """Returns the field as a string in WinIBW style.
+    /!\\ This means that blank indicators are turned to #"""
+    if field.control_field:
+        return f"{field.tag} {field.data}"
+    subf_as_string = []
+    for subf in field.subfields:
+        subf_as_string.append("$" + subf.code + subf.value)
+    ind1 = field.indicator1
+    if ind1 == " ":
+        ind1 = "#"
+    ind2 = field.indicator2
+    if ind2 == " ":
+        ind2 = "#"
+    return f"{field.tag} {ind1}{ind2}{''.join(subf_as_string)}"
+
+def record_as_string(record:pymarc.record.Record) -> str:
+    """Returns the entire record as a string in WinIBW style
+    /!\\ This means that blank indicators are turned to #"""
+    fields_as_string = []
+    for field in record.fields:
+        fields_as_string.append(field_as_string(field))
+    return "\n".join(fields_as_string)

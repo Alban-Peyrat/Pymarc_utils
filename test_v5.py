@@ -76,6 +76,9 @@ for index, record in enumerate(MARC_READER):
     # Record 000012 : test deleting multiple subfields in a field
     marc_utils.delete_multiple_subfield_for_tag(record, "725", "4")
 
+    # Print the record in the terminak
+    print(marc_utils.record_as_string(record))
+
     # Write record
     MARC_WRITER.write(record.as_marc())
 
