@@ -18,10 +18,69 @@ A set of functions to handle data using [Python `pymarc` library](https://pypi.o
 * `replace_specific_repeatable_subfield_content_not_matching_regexp()` returns a list of `pymarc.field.Subfield` instead of a list of string following old subfield managing system (code 1, value 1, code 2, value 2, etc.)
 * Added `replace_repeatable_subf_content_not_matching_regexp_for_tag()` which is the same as `replace_specific_repeatable_subfield_content_not_matching_regexp()` except it takes as argument a record and a tag and edit all fields with that tag, like all functions except the two using regular expressions
 * Added `field_as_string()` and `record_as_string()` which returns the field / record as a string in WinIBW style
+* Added all functions to retrieve dates from the record (`get_years_in_specific_subfield()`, `get_year_from_UNM_100()`, `get_years_less_accurate()` & `get_years()`)
 
 _See [`pymarc` releases in the GitLab repository](https://gitlab.com/pymarc/pymarc/-/releases) for important changes in the library._
 
 ## Functions
+
+### Getting data from fields
+
+#### Function `get_years_in_specific_subfield()`
+
+Returns a `list` of `ints` containing the first 4 consecutive numbers in the specified field-subfield couple.
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* `tag` (`str`) : the fields tag
+* `code` (`str`) : the subfields code tag
+
+#### Function `get_year_from_UNM_100()`
+
+Returns a `list` of `ints` containing the position 9-12 or 0-3 of the `100$a` if they are 4 consecutive numbers.
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* _[Optionnal]_ `creation` (`bool`, defaulted to `False`) : return the creation date (pos. 0-3) instead of the publication one (pos. 9-12)
+
+#### Function `get_years_less_accurate()`
+
+Returns a `list` of `ints` containing the first 4 consecutive numbers in the specified field (all subfields are analyzed).
+_Note : dates inferior to 1700 or superioir to 2100 are deleted before returning the `list`._
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* `tag` (`str`) : the fields tag
+
+#### Function `get_years()`
+
+Returns a `list` of `ints` containing either :
+
+* The first 4 consecutive numbers in the specified field-subfield (calls `get_years_in_specific_subfield()`)
+* The first 4 consecutive numbers in the specified field (calls `get_years_less_accurate()`).
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* `tags` (`list` of `tuple` of 2 `str`) : a list of field + subfield or field + `None`
+
+Example :
+
+``` Python
+marc_utils.get_years(record, [
+            ("214", "d"),
+            ("330", None),
+            ("615", "a"),
+            ("200", None),
+            ])
+# Will call get_years_in_specific_subfield() for 214$d
+# Then get_years_less_accurate() for 330
+# Then get_years_in_specific_subfield() for 615$a
+# Then get_years_less_accurate() for 200
+```
 
 ### Sorting fields or subfields
 

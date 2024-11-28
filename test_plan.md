@@ -270,3 +270,21 @@ Result should be :
 =725  \1$aBranwen$bRaven$4070
 =725  \1$aSchnee$bWinter
 ```
+
+## Record `000013` : test all `get_years` function
+
+Result in terminal should be :
+
+* _UNM 1000 publication date_ should be `[2011]`
+* _UNM 1000 creation date_ should be `[2015]`
+* _214$d date_ should be `[1958, 1025]`
+* _330 date_ should be `[1905]`
+* _214$d, 330, 615$a, 200 dates_ should be `[1958, 1025, 1905, 1800, 1955, 2010]`
+
+```
+UNM 1000 publication date :  [2011]
+UNM 1000 creation date :  [2015]
+214$d date :  [1958, 1025]
+330 date :  [1905]
+214$d, 330, 615$a, 200 dates :  [1958, 1025, 1905, 1800, 1955, 2010]
+```

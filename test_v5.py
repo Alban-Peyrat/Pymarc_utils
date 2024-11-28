@@ -76,6 +76,19 @@ for index, record in enumerate(MARC_READER):
     # Record 000012 : test deleting multiple subfields in a field
     marc_utils.delete_multiple_subfield_for_tag(record, "725", "4")
 
+    # Record 000013 : test date function
+    if record_nb == "000013":
+        print("UNM 1000 publication date : ", marc_utils.get_year_from_UNM_100(record, creation=False))
+        print("UNM 1000 creation date : ", marc_utils.get_year_from_UNM_100(record, creation=True))
+        print("214$d date : ", marc_utils.get_years_in_specific_subfield(record, "214", "d"))
+        print("330 date : ", marc_utils.get_years_less_accurate(record, "330"))
+        print("214$d, 330, 615$a, 200 dates : ", marc_utils.get_years(record, [
+            ("214", "d"),
+            ("330", None),
+            ("615", "a"),
+            ("200", None),
+            ]))
+
     # Print the record in the terminak
     print(marc_utils.record_as_string(record))
 

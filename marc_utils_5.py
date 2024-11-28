@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 import pymarc
-from typing import List
+from typing import List, Tuple
 import re
 
 # ------------------------------ utils internal ------------------------------
@@ -11,6 +11,78 @@ def __get_all_subfield_values_as_list(field:pymarc.field.Field) -> List[str]:
     
     Takes as argument a pymarc Field"""
     return [elem.value for elem in field.subfields]
+
+# ------------------------------ Gettign data ------------------------------
+
+def get_years_in_specific_subfield(record:pymarc.record.Record, tag:str, code:str) -> List[int]:
+    """Returns a list of ints containing the first 4 consecutive numbers in the specified field-subfield.
+    
+    Takes as argument :
+        - record : the record object
+        - tag {str}
+        - code {str}"""
+    
+    dates = []
+    for field in record.get_fields(tag):
+        for subfield in field.get_subfields(code):
+            years = re.findall(r"\d{4}", subfield)
+            if len(years) > 0:
+                dates.append(int(years[0]))
+    return dates
+
+def get_year_from_UNM_100(record:pymarc.record.Record, creation:bool=False) -> List[int]:
+    """Returns a list of ints containing the position 9-12 or 0-3 of the 100$a if they are 4 consecutive numbers.
+    
+    Takes as argument :
+        - record : the record object
+        - creation {bool} : return record creation year and not publication year"""
+    
+    dates = []
+    PATTERN = None
+    if not creation:
+        PATTERN = r"(?<=^.{9})\d{4}"
+    else:
+        PATTERN = r"^\d{4}"
+    for field in record.get_fields("100"):
+        for subfield in field.get_subfields("a"):
+            years = re.findall(PATTERN, subfield)
+            if len(years) > 0:
+                dates.append(int(years[0]))
+    return dates
+
+def get_years_less_accurate(record:pymarc.record.Record, tag:str) -> List[int]:
+    """Returns a list of ints containing the first 4 consecutive numbers in the specified field.
+    
+    Takes as argument :
+        - record : the record object
+        - tag {str}"""
+    
+    dates = []
+    for field in record.get_fields(tag):
+        for subfield in __get_all_subfield_values_as_list(field):
+            years = re.findall(r"\d{4}", subfield)
+            if len(years) > 0:
+                dates.append(int(years[0]))
+    return [date for date in dates if date > 1700 and date < 2100] #https://stackoverflow.com/questions/59925384/python-remove-elements-that-are-greater-than-a-threshold-from-a-list
+
+def get_years(record:pymarc.record, tags:List[Tuple[str, str|None]]) -> List[int]:
+    """Returns a list of ints containing either :
+        - the first 4 consecutive numbers in the specified field-subfield
+        - the first 4 consecutive numbers in the specified field concatenated
+    
+    Takes as argument :
+        - record : the record object
+        - tags : list of tuples of str : first value is the tag,
+    second value is either the subfield code or None to use field concatenation one"""
+    dates = []
+    for tag_couple in tags:
+        tag = tag_couple[0]
+        code = tag_couple[1]
+        if code == None:
+            dates += get_years_less_accurate(record, tag)
+        else:
+            dates += get_years_in_specific_subfield(record, tag, code)
+    return dates
 
 # ------------------------------ Sort ------------------------------
 
