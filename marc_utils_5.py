@@ -25,7 +25,7 @@ def get_years_in_specific_subfield(record:pymarc.record.Record, tag:str, code:st
     dates = []
     for field in record.get_fields(tag):
         for subfield in field.get_subfields(code):
-            years = re.findall(r"\d{4}", subfield)
+            years = re.findall(r"\b\d{4}\b", re.sub(r"(DL|COP\.|COPYRIGHT|COP|C)", "", subfield, flags=re.IGNORECASE))
             if len(years) > 0:
                 dates.append(int(years[0]))
     return dates

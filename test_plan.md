@@ -279,12 +279,12 @@ Result in terminal should be :
 * _UNM 1000 creation date_ should be `[2015]`
 * _214$d date_ should be `[1958, 1025]`
 * _330 date_ should be `[1905]`
-* _214$d, 330, 615$a, 200 dates_ should be `[1958, 1025, 1905, 1800, 1955, 2010]`
+* _214$d, 330, 615$a, 200, 100$a dates_ should be `[1958, 1025, 1905, 1800, 1955, 2010]`
 
 ```
 UNM 1000 publication date :  [2011]
 UNM 1000 creation date :  [2015]
 214$d date :  [1958, 1025]
 330 date :  [1905]
-214$d, 330, 615$a, 200 dates :  [1958, 1025, 1905, 1800, 1955, 2010]
+214$d, 330, 615$a, 200, 100$a dates :  [1958, 1025, 1905, 1800, 1955, 2010]
 ```

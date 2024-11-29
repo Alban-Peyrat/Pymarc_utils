@@ -82,11 +82,12 @@ for index, record in enumerate(MARC_READER):
         print("UNM 1000 creation date : ", marc_utils.get_year_from_UNM_100(record, creation=True))
         print("214$d date : ", marc_utils.get_years_in_specific_subfield(record, "214", "d"))
         print("330 date : ", marc_utils.get_years_less_accurate(record, "330"))
-        print("214$d, 330, 615$a, 200 dates : ", marc_utils.get_years(record, [
+        print("214$d, 330, 615$a, 200, 100$a dates : ", marc_utils.get_years(record, [
             ("214", "d"),
             ("330", None),
             ("615", "a"),
             ("200", None),
+            ("100", "a")
             ]))
 
     # Print the record in the terminak
