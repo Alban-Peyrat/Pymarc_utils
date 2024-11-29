@@ -288,3 +288,51 @@ UNM 1000 creation date :  [2015]
 330 date :  [1905]
 214$d, 330, 615$a, 200, 100$a dates :  [1958, 1025, 1905, 1800, 1955, 2010]
 ```
+
+## Record `000014` : test `fix_7X0_7X1()` using `70X` with already a `710`
+
+* `701` _Summer Rose_ & _Ruby Rose_ should stay as `701`
+* `710` _Qrow Branwen_ should stay as a `710`
+* `710` _Raven Branwen_ should become a `711`
+
+```
+=LDR  00148nam  2200073   45e0
+=001  000014
+=200  1\$aLove Colored Master Spark
+=701  \1$aRose$bSummer$4070
+=701  \1$aRose$bRuby$4070
+=710  \1$aBranwen$bQrow$4070
+=711  \1$aBranwen$bRaven$4070
+```
+
+## Record `000015` : test `fix_7X0_7X1()` using `71X` with already `7X0`
+
+* `700` _Summer Rose_ & _Ruby Rose_ should become `701`
+* `710` _Qrow Branwen_ should stay as a `710`
+* `710` _Raven Branwen_ should become a `711`
+
+```
+=LDR  00148nam  2200073   45e0
+=001  000015
+=200  1\$aLove Colored Master Spark
+=701  \1$aRose$bSummer$4070
+=701  \1$aRose$bRuby$4070
+=710  \1$aBranwen$bQrow$4070
+=711  \1$aBranwen$bRaven$4070
+```
+
+## Record `000016` : test `fix_7X0_7X1()` using `70X` with no `7X0`
+
+* `701` _Summer Rose_ should become `700`
+* `701` _Ruby Rose_ should stay as a `701`
+* `711` _Qrow Branwen_ & _Raven Branwen_ should stay as `711`
+
+```
+=LDR  00148nam  2200073   45e0
+=001  000016
+=200  1\$aLove Colored Master Spark
+=700  \1$aRose$bSummer$4070
+=701  \1$aRose$bRuby$4070
+=711  \1$aBranwen$bQrow$4070
+=711  \1$aBranwen$bRaven$4070
+```

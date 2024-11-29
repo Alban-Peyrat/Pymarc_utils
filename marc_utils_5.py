@@ -266,6 +266,46 @@ def replace_repeatable_subf_content_not_matching_regexp_for_tag(record:pymarc.re
     for field in record.get_fields(tag):
         replace_specific_repeatable_subfield_content_not_matching_regexp(field, codes, pattern, repl)
 
+def fix_7XX(record:pymarc.record.Record, prioritize_71X:bool=False):
+    """Makes sure that only 1 7X0 is in the record and
+    that there's at least one 7X0 if there are 7X1 or 7X2
+     
+    Takes as argument :
+        - record : a pymarc record
+        - [OPTIONNAL, False] prioritize_71X {bool} : priotize 70X
+    instead of 71X"""
+    prio_7X = "70"
+    unprio_7X = "71"
+    if prioritize_71X:
+        prio_7X = "71"
+        unprio_7X = "70"
+    # if 700 & 710, keep the priotize ones
+    all_7X0 = record.get_fields("700", "710")
+    if len(all_7X0) > 1:
+        # ↓ This is used to make sure we keep the first non prio
+        # as a 0 in case the prio one don't have a 0 field
+        has_prio_7X0 = len(record.get_fields(prio_7X + "0")) > 0
+        first_occ = True
+        for field in all_7X0:
+            # i know I can nest things, but i like this better 
+            if first_occ:
+                if field.tag == unprio_7X + "0" and has_prio_7X0:
+                    field.tag = unprio_7X + "1"
+                elif field.tag == prio_7X + "0":
+                    first_occ = False
+                elif field.tag == unprio_7X + "0" and not has_prio_7X0:
+                    first_occ = False
+            else:
+                field.tag = field.tag[:2] + "1"
+
+    # Checks if there's a 7X0 if 7X1 are in the record
+    if len(record.get_fields("700", "710")) == 0 and len(record.get_fields("701", "711", "702", "712")) > 0:
+        # If there are, get the first field 
+        for tag in [prio_7X + "1", unprio_7X + "1", prio_7X + "2", unprio_7X + "2"]:
+            if len(record.get_fields(tag)) > 0:
+                record.get_fields(tag)[0].tag = record.get_fields(tag)[0].tag[:2] + "0"
+                break
+
 # ------------------------------ Merge ------------------------------
 
 def merge_all_fields_by_tag(record:pymarc.record.Record, tag:str, sort:List[str]=[]) -> pymarc.field.Field|None:

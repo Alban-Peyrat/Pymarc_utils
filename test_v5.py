@@ -90,6 +90,12 @@ for index, record in enumerate(MARC_READER):
             ("100", "a")
             ]))
 
+    if record_nb in ["000014", "000016"]:
+        marc_utils.fix_7XX(record, prioritize_71X=False)
+    elif record_nb == "000015":
+        marc_utils.fix_7XX(record, prioritize_71X=True)
+
+
     # Print the record in the terminak
     print(marc_utils.record_as_string(record))
 

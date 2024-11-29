@@ -174,6 +174,15 @@ Takes as argument :
 * `pattern` (`str`) : regular expression matching pattern
 * `repl` (`str`) : the replacement text to use
 
+#### Function `fix_7XX()`
+
+Change tags in `7XX` fields to make sure that only 1 `7X0` is in the record and there's at least one `7X0` if there are `7X1` or `7X2`
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* _[Optionnal]_ `prioritize_71X` (`bool`, default to `False`) : prioritize `710` over `700`
+
 ### Merge fields
 
 #### Function `merge_all_fields_by_tag()`
