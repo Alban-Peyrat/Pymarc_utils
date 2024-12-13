@@ -95,6 +95,8 @@ for index, record in enumerate(MARC_READER):
     elif record_nb == "000015":
         marc_utils.fix_7XX(record, prioritize_71X=True)
 
+    # Record 000017 : test merge subfields
+    marc_utils.merge_all_subfields_with_code(record, "324", "a", " ; ")
 
     # Print the record in the terminak
     print(marc_utils.record_as_string(record))

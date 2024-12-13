@@ -19,6 +19,7 @@ A set of functions to handle data using [Python `pymarc` library](https://pypi.o
 * Added `replace_repeatable_subf_content_not_matching_regexp_for_tag()` which is the same as `replace_specific_repeatable_subfield_content_not_matching_regexp()` except it takes as argument a record and a tag and edit all fields with that tag, like all functions except the two using regular expressions
 * Added `field_as_string()` and `record_as_string()` which returns the field / record as a string in WinIBW style
 * Added all functions to retrieve dates from the record (`get_years_in_specific_subfield()`, `get_year_from_UNM_100()`, `get_years_less_accurate()` & `get_years()`)
+* Added `merge_all_subfields_with_code()` to merge all subfields witht the same code for each field with given tag
 
 _See [`pymarc` releases in the GitLab repository](https://gitlab.com/pymarc/pymarc/-/releases) for important changes in the library._
 
@@ -196,6 +197,18 @@ Takes as argument :
 * `record` (`pymarc.record.Record`)
 * `tag` (`str`) : the fields tag to merge
 * _[Optionnal]_ `sort` (`list` of `str`, default to no sort) : list of subfields codes to sort. See [_`sort` argument logic_](#sort-argument-logic) to see how to configure it.
+
+#### Function `merge_all_subfields_with_code()`
+
+Merges all subfields with given code in every field with given tag.
+The position of the first subfield will be kept.
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* `tag` (`str`) : the fields tag to edit
+* `code` (`str`) : the subfield code to merge
+* `separator` (`str`) : the separtor to use between subfields
 
 ### Split fields
 

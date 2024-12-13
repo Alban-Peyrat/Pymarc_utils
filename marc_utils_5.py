@@ -342,6 +342,38 @@ def merge_all_fields_by_tag(record:pymarc.record.Record, tag:str, sort:List[str]
     record.add_ordered_field(new_field)
     return new_field
 
+def merge_all_subfields_with_code(record:pymarc.record.Record, tag:str, code:str, separator:str):
+    """Merges all subfields with given code in every field with given tag.
+    The position of the first subfield will be kept
+    
+    Takes as argument :
+        - record : the pymarc record
+        - tag : the field tag (str)
+        - code : the subfield code to merge (str)
+        - separator : the separtor to use between subfields (str)"""
+    for field in record.get_fields(tag):
+        value_list = field.get_subfields(code)
+        # If no subfield with this code or only 1, skipp this field
+        if len(value_list) < 2:
+            continue
+        consummed = False
+        new_subfields = []
+        # Iterate throguh all subfields
+        for subf in field.subfields:
+            # Ignore subfield if not the right code
+            if subf.code != code:
+                new_subfields.append(subf)
+                continue
+            # If first time seeign this subfield, change its value
+            if not consummed:
+                new_subfields.append(pymarc.Subfield(code, separator.join(value_list)))
+                consummed = True
+            # Delete the subfield if not forst occurrence
+            # (Elif to avoid triggerring on 1st field)
+            elif consummed:
+                continue
+        field.subfields = new_subfields
+
 # ------------------------------ Split ------------------------------
 
 def split_tags_if_multiple_specific_subfield(record:pymarc.record.Record, tag:str, code:str):

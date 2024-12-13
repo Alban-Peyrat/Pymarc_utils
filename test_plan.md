@@ -336,3 +336,19 @@ UNM 1000 creation date :  [2015]
 =711  \1$aBranwen$bQrow$4070
 =711  \1$aBranwen$bRaven$4070
 ```
+
+## Record `000017` : test `merge_all_subfields_with_code()`
+
+* First & second `324` should not change (keep only a `$aJaune` and `$bPyrrha`)
+* Third `324` should merge all `$a` in second position while removing all other `$a` & keeping every other field at the same place
+
+```
+=LDR  00148nam  2200073   45e0
+=001  000017
+=200  1\$aLove Colored Master Spark
+=324  \\$aJaune
+=324  \\$bPyrrha
+=324  \\$bSummer$aRuby ; Weiss ; Blake ; Yang$bNora$bRen
+=330  \\$aRésumé
+=701  \1$aRose$bSummer$4070
+```
