@@ -536,6 +536,17 @@ def delete_multiple_subfield_for_tag(record:pymarc.record.Record, tag:str, code:
         # Replace current subfields by the new list
         field.subfields = new_subf_list
 
+def delete_all_subfields_with_code_from_field(record:pymarc.record.Record, tag:str, code:str):
+    """Delete all subfields with this code of all fields with this tag
+    
+    Takes as argument :
+        - record : a pymarc record
+        - tag : the tag to edit (str)
+        - code : the code to delete (str)"""
+    for field in record.get_fields(tag):
+        for ii in range(0, len(field.get_subfields(code))):
+            field.delete_subfield(code)
+
 # ------------------------------ Debug ------------------------------
 
 def field_as_string(field:pymarc.field.Field) -> str:

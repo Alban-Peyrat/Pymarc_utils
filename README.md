@@ -267,6 +267,16 @@ Takes as argument :
 * `tag` (`str`) : the fields tag to edit
 * `code` (`str`) : the subfield code to keep only once
 
+#### Function `delete_all_subfields_with_code_from_field()`
+
+For all fields with given tag, deletes every subfield with given code.
+
+Takes as argument :
+
+* `record` (`pymarc.record.Record`)
+* `tag` (`str`) : the fields tag to edit
+* `code` (`str`) : the subfield code to delete
+
 ### Debugging
 
 #### Function `field_as_string()`
