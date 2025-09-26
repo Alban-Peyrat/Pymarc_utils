@@ -159,6 +159,7 @@ Takes as argument :
 * `codes` (`list` of `str`) : list of subfield codes to edit
 * `pattern` (`str`) : regular expression matching pattern
 * `repl` (`str`) : regular expression substitution expression
+* _[Optionnal]_ `flags` (`re.RegexFlag`, defaulted to `NOFLAG`) : flags to use in regular expression matching
 
 #### Function `replace_repeatable_subf_content_not_matching_regexp_for_tag()`
 
@@ -174,6 +175,7 @@ Takes as argument :
 * `codes` (`list` of `str`) : list of subfield codes to edit
 * `pattern` (`str`) : regular expression matching pattern
 * `repl` (`str`) : the replacement text to use
+* _[Optionnal]_ `flags` (`re.RegexFlag`, defaulted to `NOFLAG`) : flags to use in regular expression matching
 
 #### Function `fix_7XX()`
 
