@@ -3,6 +3,7 @@
 import pymarc
 from typing import List, Tuple
 import re
+import unicodedata
 
 # ------------------------------ utils internal ------------------------------
 
@@ -12,6 +13,13 @@ def __get_all_subfield_values_as_list(field:pymarc.field.Field) -> List[str]:
     Takes as argument a pymarc Field"""
     return [elem.value for elem in field.subfields]
 
+def __is_valid_normalize_value(txt:str) -> str:
+    """Checks if the text trimmed & upper is a valid value for unicodedata.noramlize.
+    If not, defaults to NFC"""
+    txt = txt.strip().upper()
+    if txt in ["NFC", "NFKC", "NFD", "NFKD"]:
+        return txt
+    return "NFC"
 # ------------------------------ Gettign data ------------------------------
 
 def get_years_in_specific_subfield(record:pymarc.record.Record, tag:str, code:str) -> List[int]:
@@ -185,8 +193,8 @@ def add_missing_subfield_to_field(record:pymarc.record.Record, tag:str, code:str
 
 # ------------------------------ Edit ------------------------------
 
-def edit_specific_repeatable_subfield_content_with_regexp(field:pymarc.field.Field, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG) -> List[pymarc.field.Subfield]:
-    """Apply a regexp substitution to all subfields of a code (no flag).
+def edit_specific_repeatable_subfield_content_with_regexp(field:pymarc.field.Field, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG, normalize:str=None) -> List[pymarc.field.Subfield]:
+    """Apply a regexp substitution to all subfields of a code.
     Edits the field and also return the subfield list (as pymarc.field.Subfield)
     
     Takes as argument :
@@ -194,15 +202,23 @@ def edit_specific_repeatable_subfield_content_with_regexp(field:pymarc.field.Fie
         - codes : list of codes to edit (str)
         - pattern : regexp pattern
         - repl : regexp sub pattern
-        - flags : regexp flags (default to none)"""
+        - flags : regexp flags (default to none)
+        - normalize : noramlize using provided normal form, None to not normalize (default to None)"""
     
     subf_list:List[pymarc.field.Subfield] = field.subfields
     new_subf = []
+    # Make sure normalize code is valid
+    if normalize != None:
+        normalize = __is_valid_normalize_value(normalize)
     for subf in subf_list:
         # If right codes, use the regex replace
         # Subfield are NammedTupples and those are IMMUTABLE /!\
         if subf.code in codes:
-            new_subf.append(subf._replace(value=re.sub(pattern, repl, subf.value, flags=flags)))
+            # Normalize text if needed
+            value = subf.value
+            if normalize != None:
+                value = unicodedata.normalize(normalize, value)
+            new_subf.append(subf._replace(value=re.sub(pattern, repl, value, flags=flags)))
         # Else, add the unedited subfield
         else:
             new_subf.append(subf)
@@ -211,7 +227,7 @@ def edit_specific_repeatable_subfield_content_with_regexp(field:pymarc.field.Fie
     field.subfields = new_subf
     return new_subf
 
-def edit_repeatable_subf_content_with_regexp_for_tag(record:pymarc.record.Record, tag:str, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG):
+def edit_repeatable_subf_content_with_regexp_for_tag(record:pymarc.record.Record, tag:str, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG, normalize:str=None):
     """Apply a regexp substitution to all subfields of a code (no flag).
     
     Takes as argument :
@@ -220,13 +236,14 @@ def edit_repeatable_subf_content_with_regexp_for_tag(record:pymarc.record.Record
         - codes : list of codes to edit (str)
         - pattern : regexp pattern
         - repl : regexp sub pattern
-        - flags : regexp flags (default to none)"""
+        - flags : regexp flags (default to none)
+        - normalize : noramlize using provided normal form, None to not normalize (default to None)"""
     
     for field in record.get_fields(tag):
-        edit_specific_repeatable_subfield_content_with_regexp(field, codes, pattern, repl, flags=flags)
+        edit_specific_repeatable_subfield_content_with_regexp(field, codes, pattern, repl, flags=flags, normalize=normalize)
 
 
-def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymarc.field.Field, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG) -> List[pymarc.field.Subfield]:
+def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymarc.field.Field, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG, normalize:str=None) -> List[pymarc.field.Subfield]:
     """Replace all subfields of a code by a value if they do not match a regexp (no flag).
     Edits the field and also return the subfield list (as pymarc.field.Subfield)
     
@@ -235,15 +252,23 @@ def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymar
         - codes : list of codes to edit (str)
         - pattern : regexp pattern
         - repl : repalcement text
-        - flags : regexp flags (default to none)"""
+        - flags : regexp flags (default to none)
+        - normalize : noramlize using provided normal form, None to not normalize (default to None)"""
     
     subf_list:List[pymarc.field.Subfield] = field.subfields
     new_subf = []
+    # Make sure normalize code is valid
+    if normalize != None:
+        normalize = __is_valid_normalize_value(normalize)
     for subf in subf_list:
         # If right codes, check if the regex match
         if subf.code in codes:
+        # Normalize text if needed
+            value = subf.value
+            if normalize != None:
+                value = unicodedata.normalize(normalize, value)
             # If no match, rewrite using replacement string
-            if not re.match(pattern, subf.value, flags=flags):
+            if not re.match(pattern, value, flags=flags):
                 new_subf.append(subf._replace(value=repl))
             # If match, add the unedited subfield
             else:
@@ -256,7 +281,7 @@ def replace_specific_repeatable_subfield_content_not_matching_regexp(field:pymar
     field.subfields = new_subf
     return new_subf
 
-def replace_repeatable_subf_content_not_matching_regexp_for_tag(record:pymarc.record.Record, tag:str, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG):
+def replace_repeatable_subf_content_not_matching_regexp_for_tag(record:pymarc.record.Record, tag:str, codes:List[str], pattern:str, repl:str, flags:re.RegexFlag=re.NOFLAG, normalize:str=None):
     """Replace all subfields of a code by a value if they do not match a regexp (no flag).
     
     Takes as argument :
@@ -265,10 +290,11 @@ def replace_repeatable_subf_content_not_matching_regexp_for_tag(record:pymarc.re
         - codes : list of codes to edit (str)
         - pattern : regexp pattern
         - repl : repalcement text
-        - flags : regexp flags (default to none)"""
+        - flags : regexp flags (default to none)
+        - normalize : noramlize using provided normal form, None to not normalize (default to None)"""
     
     for field in record.get_fields(tag):
-        replace_specific_repeatable_subfield_content_not_matching_regexp(field, codes, pattern, repl, flags=flags)
+        replace_specific_repeatable_subfield_content_not_matching_regexp(field, codes, pattern, repl, flags=flags, normalize=normalize)
 
 def fix_7XX(record:pymarc.record.Record, prioritize_71X:bool=False):
     """Makes sure that only 1 7X0 is in the record and

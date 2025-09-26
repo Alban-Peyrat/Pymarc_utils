@@ -160,6 +160,7 @@ Takes as argument :
 * `pattern` (`str`) : regular expression matching pattern
 * `repl` (`str`) : regular expression substitution expression
 * _[Optionnal]_ `flags` (`re.RegexFlag`, defaulted to `NOFLAG`) : flags to use in regular expression matching
+* _[Optionnal]_ `normalize` (`str`, defaulted to `None`) : set to `NFC`, `NFKC`, `NFD` or `NFKD` to normalize the strign before the matching. `None` to skip normalizing. If value is not `None` or in the list, defautls to `NFC` 
 
 #### Function `replace_repeatable_subf_content_not_matching_regexp_for_tag()`
 
@@ -176,6 +177,7 @@ Takes as argument :
 * `pattern` (`str`) : regular expression matching pattern
 * `repl` (`str`) : the replacement text to use
 * _[Optionnal]_ `flags` (`re.RegexFlag`, defaulted to `NOFLAG`) : flags to use in regular expression matching
+* _[Optionnal]_ `normalize` (`str`, defaulted to `None`) : set to `NFC`, `NFKC`, `NFD` or `NFKD` to normalize the strign before the matching. `None` to skip normalizing. If value is not `None` or in the list, defautls to `NFC`
 
 #### Function `fix_7XX()`
 
